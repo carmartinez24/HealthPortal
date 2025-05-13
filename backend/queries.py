@@ -195,7 +195,7 @@ def export_health_records(patient_id, file_path='exported_health_records.csv'):
         writer.writerows(records)
     print(f"Health records for patient_id {patient_id} exported to {file_path}")
 
-# group by function - shows patients count of appts per appt status
+# group by function - shows patients count of appts per appt status :D
 def pateint_appt_counts(patinet_id):
     query = '''
     SELECT status, COUNT(*) AS Count
