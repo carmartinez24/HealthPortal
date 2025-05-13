@@ -195,20 +195,19 @@ def export_health_records(patient_id, file_path='exported_health_records.csv'):
         writer.writerows(records)
     print(f"Health records for patient_id {patient_id} exported to {file_path}")
 
-
-def count_appointments_per_doctor(): #do next 
+# group by function - shows patients count of appts per appt status
+def pateint_appt_counts(patinet_id):
     query = '''
-    SELECT d.name AS doctor_name, COUNT(*) AS appointment_count
-    FROM appointment a
-    JOIN doctor d 
-        ON a.doctor_id = d.doctor_id
-    GROUP BY d.name
-    ORDERY BY appointment_count DESC;
+    SELECT status, COUNT(*) AS Count
+    FROM appointment
+    WHERE patient_id = %s
+    GROUP BY status;
     '''
 
-    results = db_ops.select_query(query)
+    results = db_ops.select_query_params(query, (patinet_id,))
+    print(f"Appointment counts by status for patient {patinet_id}:")
     for row in results:
-        print(f"{row[0]} has {row[1]} appointments.")
+        print(f"{row[0]} : {row[1]}")
 
 # transaction query! when patients book appts, it randomly assigns a doctor, and sends that doctor and automatic message
 def book_appt_message_doctor(patient_id, date, time, status = None, reason = None):
